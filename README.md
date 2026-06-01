@@ -1,7 +1,7 @@
 # GasStation Hub - Sistema Inteligente para Postos de Combustível
 
 ## Integrantes
-- [Seu Nome] - [Sua Turma]
+- Guilherme Duffes Marques - [26E2_4]
 
 ## Descrição do Projeto
 O sistema visa resolver a gestão de abastecimentos em postos de combustível e a integração automática com programas de fidelidade. A arquitetura garante que o posto continue operando o registro de vendas (abastecimentos) mesmo se o sistema de fidelidade estiver temporariamente indisponível.

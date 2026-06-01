@@ -12,6 +12,6 @@ public class LoyaltyController {
     @GetMapping("/{customerId}/points")
     public String getPoints(@PathVariable String customerId) {
         // Simulação de banco de dados para evitar erro se o MongoDB não estiver rodando
-        return "Cliente " + customerId + " possui 1500 pontos no sistema de fidelidade!";
+        return "Cliente " + customerId + " possui 1500 pontos no sistema de fidelidade! (mongo não está rodando)";
     }
 }

@@ -1,0 +1,23 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: supply-service
+          uri: lb://supply-service
+          predicates:
+            - Path=/api/supplies/**
+        - id: loyalty-service
+          uri: lb://loyalty-service
+          predicates:
+            - Path=/api/loyalty/**
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

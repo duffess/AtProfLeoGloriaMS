@@ -1,6 +1,6 @@
 # Proposta e Arquitetura Inicial de Microservices
-## Disciplina: Desenvolvimento de Aplicações Distribuidas com Spring Cloud
-**Identificação da Turma:** [26E2_4]  
+## Disciplina: Microsserviços e DevOps com Spring Boot e Spring Cloud
+**Identificação da Turma:** [26E2_3]  
 **Integrante:** Guilherme Duffes Marques  
 
 ---

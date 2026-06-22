@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS supply;
+CREATE TABLE supply (
+    id SERIAL PRIMARY KEY,
+    amount DOUBLE PRECISION NOT NULL,
+    literage DOUBLE PRECISION NOT NULL,
+    customer_id VARCHAR(50) NOT NULL,
+    timestamp TIMESTAMP
+);

@@ -14,15 +14,111 @@ services:
       - pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
-  mongodb:
-    image: mongo:6-jammy
-    container_name: gasstation-mongodb
+  postgres-loyalty:
+    image: postgres:15-alpine
+    container_name: gasstation-postgres-loyalty
     ports:
-      - "27017:27017"
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: loyalty_db
     volumes:
-      - mongodata:/data/db
+      - pgloyaltydata:/var/lib/postgresql/data
     restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: gasstation-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: gasstation-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    restart: unless-stopped
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: gasstation-kafdrop
+    depends_on:
+      - kafka
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+    restart: unless-stopped
+
+  auth-service:
+    build: ./auth-service
+    container_name: gasstation-auth
+    ports:
+      - "8084:8084"
+    depends_on:
+      - discovery-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+
+  discovery-server:
+    build: ./discovery-server
+    container_name: gasstation-discovery
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: gasstation-gateway
+    ports:
+      - "8083:8083"
+    depends_on:
+      - discovery-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+
+  supply-service:
+    build: ./supply-service
+    container_name: gasstation-supply
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-server
+      - postgres
+      - kafka
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gasstation_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+
+  loyalty-service:
+    build: ./loyalty-service
+    container_name: gasstation-loyalty
+    ports:
+      - "8082:8082"
+    depends_on:
+      - discovery-server
+      - postgres-loyalty
+      - kafka
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres-loyalty:5432/loyalty_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
 
 volumes:
   pgdata:
-  mongodata:
+  pgloyaltydata:

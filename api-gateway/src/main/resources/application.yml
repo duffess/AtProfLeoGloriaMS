@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8083
 spring:
   application:
     name: api-gateway
@@ -13,6 +13,10 @@ spring:
           uri: lb://supply-service
           predicates:
             - Path=/api/supplies/**
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
         - id: loyalty-service
           uri: lb://loyalty-service
           predicates:

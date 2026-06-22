@@ -1,0 +1,30 @@
+### GasStation Hub - HTTP Client Requests (API Gateway: 8080)
+
+# =========================================================================
+# 1. FLUXO DE FIDELIDADE (loyalty-service via Gateway)
+# =========================================================================
+
+### Consultar pontos de um cliente (cria registro padrão se não existir no MongoDB)
+GET http://localhost:8080/api/loyalty/12345/points
+Accept: application/json
+
+
+### Adicionar pontos diretamente a um cliente no MongoDB
+POST http://localhost:8080/api/loyalty/12345/add-points?points=500
+Accept: application/json
+
+
+# =========================================================================
+# 2. FLUXO DE ABASTECIMENTO (supply-service via Gateway)
+# =========================================================================
+
+### Realizar checkout de abastecimento (Persiste no Postgres + pontua no MongoDB)
+# Se o loyalty-service estiver online: Conclui com sucesso e atualiza pontos.
+# Se o loyalty-service estiver offline: Ativa o Circuit Breaker e executa o Fallback local.
+POST http://localhost:8080/api/supplies/checkout?customerId=12345&amount=150.00&literage=25.0
+Accept: application/json
+
+
+### Realizar checkout com outros valores
+POST http://localhost:8080/api/supplies/checkout?customerId=99999&amount=300.00&literage=50.0
+Accept: application/json

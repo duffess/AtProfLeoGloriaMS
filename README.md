@@ -1,12 +1,5 @@
 # ⛽ GasStation Hub
 
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
-![Apache Kafka](https://img.shields.io/badge/Apache_Kafka-231F20?style=for-the-badge&logo=apache-kafka&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/postgresql-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-
 O **GasStation Hub** é uma plataforma distribuída baseada em Microsserviços para gerenciamento de postos de combustíveis. O sistema não apenas controla o processo de abastecimento em si (Supply), como também conta com um programa de fidelidade (Loyalty) integrado, além de uma arquitetura segura, resiliente e escalável.
 
 ---
